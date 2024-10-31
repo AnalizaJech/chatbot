@@ -31,14 +31,14 @@
 
     <!-- Botón de icono del chatbot -->
     <button id="chatbotIcon" class="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-white flex items-center justify-center">
-        <img src="/mnt/data/bot.svg" alt="Icono de chatbot" class="w-8 h-8" id="iconImage">
+        <img src="src/bot.svg" alt="Icono de chatbot" class="w-8 h-8" id="iconImage">
     </button>
 
     <!-- Ventana de chat -->
     <div id="chatbotWindow" class="hidden fixed bottom-24 right-6 w-80 bg-white rounded-lg shadow-lg p-4 flex flex-col" style="height: 30rem;">
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-2">
-                <img src="/mnt/data/bot.svg" alt="Icono de chatbot" class="w-6 h-6">
+                <img src="src/bot.svg" alt="Icono de chatbot" class="w-6 h-6">
                 <h2 class="font-semibold text-gray-800">Consultale a Jech</h2>
             </div>
             <div class="relative">
@@ -49,8 +49,8 @@
                 </button>
                 <div id="optionsMenu" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10">
                     <button onclick="clearChat()" class="w-full flex items-center text-left px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg">
-                        <img src="/mnt/data/trash.svg" alt="Eliminar" class="h-5 w-5 mr-2">
-                        Borrar conversación
+                        <img src="src/trash.svg" alt="Eliminar" class="h-5 w-5 mr-2">
+                        Borrar chat
                     </button>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         <div class="flex items-center space-x-2">
             <input type="text" placeholder="Escribe tus dudas..." class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none" id="chatInput" onkeypress="handleKeyPress(event)">
             <button onclick="sendMessage()" class="bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700">
-                <img src="/mnt/data/send.svg" alt="Enviar" class="h-5 w-5">
+                <img src="src/send.svg" alt="Enviar" class="h-5 w-5">
             </button>
         </div>
     </div>
@@ -81,9 +81,9 @@
         chatbotIcon.addEventListener("click", () => {
             chatbotWindow.classList.toggle("hidden");
             if (chatbotWindow.classList.contains("hidden")) {
-                iconImage.src = "/mnt/data/bot.svg";
+                iconImage.src = "src/bot.svg";
             } else {
-                iconImage.src = "/mnt/data/cerrar-bot.svg";
+                iconImage.src = "src/cerrar-bot.svg";
             }
         });
 
