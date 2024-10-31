@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Estilo personalizado para la barra de desplazamiento */
+        #chatContent::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #chatContent::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        #chatContent::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+            border: 2px solid #f1f1f1;
+        }
+        
+        #chatContent::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body class="flex items-end justify-end min-h-screen p-4 bg-gray-100">
+
+    <!-- Botón de icono del chatbot -->
+    <button id="chatbotIcon" class="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg bg-white flex items-center justify-center">
+        <img src="/mnt/data/bot.svg" alt="Icono de chatbot" class="w-8 h-8" id="iconImage">
+    </button>
+
+    <!-- Ventana de chat -->
+    <div id="chatbotWindow" class="hidden fixed bottom-24 right-6 w-80 bg-white rounded-lg shadow-lg p-4 flex flex-col" style="height: 30rem;">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+                <img src="/mnt/data/bot.svg" alt="Icono de chatbot" class="w-6 h-6">
+                <h2 class="font-semibold text-gray-800">Consultale a Jech</h2>
+            </div>
+            <div class="relative">
+                <button onclick="toggleOptions()" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM10 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM10 13a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
+                    </svg>
+                </button>
+                <div id="optionsMenu" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10">
+                    <button onclick="clearChat()" class="w-full flex items-center text-left px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg">
+                        <img src="/mnt/data/trash.svg" alt="Eliminar" class="h-5 w-5 mr-2">
+                        Borrar conversación
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="chatContent" class="rounded-lg p-2 flex-1 overflow-y-auto mb-4" style="max-height: 24rem;">
+            <!-- Mensaje inicial del chatbot -->
+            <div class="text-white bg-gray-700 p-2 rounded-lg mb-2 max-w-xs break-words">
+                Hola, ¿En qué puedo ayudarte hoy?
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <input type="text" placeholder="Escribe tus dudas..." class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none" id="chatInput" onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="bg-gray-800 text-white p-2 rounded-full hover:bg-gray-700">
+                <img src="/mnt/data/send.svg" alt="Enviar" class="h-5 w-5">
+            </button>
+        </div>
+    </div>
+
+    <!-- Script de funcionalidad -->
+    <script>
+        const chatbotIcon = document.getElementById("chatbotIcon");
+        const chatbotWindow = document.getElementById("chatbotWindow");
+        const iconImage = document.getElementById("iconImage");
+        const chatContent = document.getElementById("chatContent");
+        const chatInput = document.getElementById("chatInput");
+        const optionsMenu = document.getElementById("optionsMenu");
+
+        chatbotIcon.addEventListener("click", () => {
+            chatbotWindow.classList.toggle("hidden");
+            if (chatbotWindow.classList.contains("hidden")) {
+                iconImage.src = "/mnt/data/bot.svg";
+            } else {
+                iconImage.src = "/mnt/data/cerrar-bot.svg";
+            }
+        });
+
+        function toggleOptions() {
+            optionsMenu.classList.toggle("hidden");
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                const userMessageElement = document.createElement("p");
+                userMessageElement.classList.add("text-gray-800", "bg-blue-100", "p-2", "rounded-lg", "mb-2", "self-end", "max-w-xs", "break-words");
+                userMessageElement.textContent = message;
+                chatContent.appendChild(userMessageElement);
+
+                const typingIcon = document.createElement("div");
+                typingIcon.classList.add("text-gray-400", "bg-gray-200", "p-2", "rounded-lg", "mb-2", "max-w-xs", "flex", "items-center", "space-x-2");
+                typingIcon.innerHTML = `
+                    <svg class="h-4 w-4 animate-spin" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 001 1h2a1 1 0 100-2h-1V6z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Escribiendo...</span>
+                `;
+                chatContent.appendChild(typingIcon);
+
+                setTimeout(() => {
+                    typingIcon.remove();
+                    const botMessage = "Esta es una respuesta del chatbot que se adapta al contenido del mensaje.";
+                    const botMessageElement = document.createElement("p");
+                    botMessageElement.classList.add("text-white", "bg-gray-700", "p-2", "rounded-lg", "mb-2", "max-w-xs", "break-words");
+                    botMessageElement.textContent = botMessage;
+                    chatContent.appendChild(botMessageElement);
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                }, 1000);
+
+                chatInput.value = "";
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+        }
+
+        function clearChat() {
+            chatContent.innerHTML = `
+                <div class="text-white bg-gray-700 p-2 rounded-lg mb-2 max-w-xs break-words">
+                    Hola, ¿En qué puedo ayudarte hoy?
+                </div>
+            `;
+            optionsMenu.classList.add("hidden");
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+                event.preventDefault(); // Evita el salto de línea al presionar Enter
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!event.target.closest("#optionsMenu") && !event.target.closest("[onclick='toggleOptions()']")) {
+                optionsMenu.classList.add("hidden");
+            }
+        });
+    </script>
+
+</body>
+</html>
